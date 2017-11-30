@@ -1,4 +1,6 @@
-# `Proxee` — A more usable [`Proxy`](https://docs.perl6.org/type/Proxy) with bells
+# NAME
+
+`Proxee` — A more usable [`Proxy`](https://docs.perl6.org/type/Proxy) with bells
 
 # SYNOPSIS
 
