@@ -4,11 +4,13 @@
 
 # SYNOPSIS
 
+```perl6
+    use Proxee;
+```
+
 Coercers:
 
 ```perl6
-    use Proxee;
-
     # Coercer types on variables:
     my $integral := Proxee.new: Int();
     $integral = ' 42.1e0 ';
