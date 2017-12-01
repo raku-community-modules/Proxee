@@ -159,6 +159,9 @@ value to `$*PROXEE`:
     say $squarer; # OUTPUT: «121␤»
 ```
 
+Attempting to use both `:PROXEE` and `:STORE` arguments at the same time
+will throw `Proxee::X::CannotProxeeStore` exception.
+
 ### A Callable
 
 You can also pass a single codeblock as an argument. It will be evaluated
