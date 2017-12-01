@@ -2,6 +2,20 @@
 
 `Proxee` — A more usable [`Proxy`](https://docs.perl6.org/type/Proxy) with bells
 
+# TABLE OF CONTENTS
+- [NAME](#name)
+- [SYNOPSIS](#synopsis)
+- [DESCRIPTION](#description)
+- [METHODS](#methods)
+    - [`new`](#new)
+        - [A Coercer](#a-coercer)
+        - [An Improved Proxy](#an-improved-proxy)
+        - [A Callable](#a-callable)
+- [REPOSITORY](#repository)
+- [BUGS](#bugs)
+- [AUTHOR](#author)
+- [LICENSE](#license)
+
 # SYNOPSIS
 
 ```perl6
