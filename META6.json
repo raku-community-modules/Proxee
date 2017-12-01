@@ -7,7 +7,10 @@
     "tags"         : [ "containers" ],
     "depends"      : [ ],
     "test-depends" : [ "Test" ],
-    "provides"     : { "Proxee": "lib/Proxee.pm6" },
+    "provides"     : {
+        "Proxee": "lib/Proxee.pm6",
+        "Proxee::X::CannotBindStore": "lib/Proxee.pm6"
+    },
     "authors"      : ["Zoffix Znet"],
     "support"      : { "source" : "https://github.com/zoffixznet/perl6-Proxy.git" }
 }

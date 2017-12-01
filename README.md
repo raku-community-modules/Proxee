@@ -18,9 +18,8 @@ Coercers:
 
     # Coercer types on attributes:
     class Foo {
-        has $!foo;
-        method foo { Proxee.new: Int(), :use($!foo) }
-        submethod TWEAK (:$foo) { self.foo = $foo }
+        has $.foo is rw;
+        submethod TWEAK (:$foo) { ($!foo := Proxee.new: Int()) = $foo }
     }
     my $o = Foo.new: :foo('42.1e0');
     say $o.foo;       # OUTPUT: «42␤»
@@ -59,7 +58,7 @@ Special shared dynvar:
     say $stuff2; # OUTPUT: «42 | meow␤»
 
     # Default FETCHer
-    my $squarer := Proxee.new: :STORE{ $*PROXEE := $_² },
+    my $squarer := Proxee.new: :STORE{ $*PROXEE = $_² },
     $squarer = 11;
     say $squarer; # OUTPUT: «121␤»
 

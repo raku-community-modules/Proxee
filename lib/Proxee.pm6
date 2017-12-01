@@ -1,17 +1,40 @@
 unit class Proxee;
 use MONKEY-GUTS;
 
-proto method new(|) { * }
+class Proxee::X::CannotAssignStore is Exception {
+    method message {
+        'A Proxee cannot use :ASSIGN and :STORE at the same time'
+    }
+}
 
+proto method new(|) { * }
+multi method new (&block) {
+    dd [ |block ];
+    self.new: |block
+}
 multi method new(\coercer where {.HOW ~~ Metamodel::CoercionHOW}) {
     my \from     = coercer.^constraint_type;
     my \to       = coercer.^target_type;
     my $to-name := to.^name;
 
     my $STORAGE;
-    Proxy.new: :FETCH{ $STORAGE }, STORE => -> $, \arg {
-        die X::TypeCheck::Binding.new: :got(arg.WHAT), :expected(from), :symbol('<unknown>')
-            unless nqp::istype(arg, from); # on 2017.11 is about 13x faster than smartmatch
-        $STORAGE := arg."$to-name"()
+    Proxy.new: :FETCH{ $STORAGE }, STORE => -> $, \v {
+        die X::TypeCheck.new: :got(v.WHAT), :expected(from), :operation<Proxee>
+            unless nqp::istype(v, from); # on 2017.11 about 13x faster than ~~
+
+        nqp::istype(v, to) ?? ($STORAGE := v)
+                           !! ($STORAGE := v."$to-name"());
+        $STORAGE
     }
+}
+multi method new (:&ASSIGN, :&STORE, :&FETCH) {
+    &ASSIGN and &STORE and die Proxee::X::CannotAssignStore.new;
+
+    my &store := &ASSIGN ?? { $*PROXEE = ASSIGN $_ }
+                         !! (&STORE || { $*PROXEE = $_ });
+    my &fetch := &FETCH  || { $*PROXEE };
+
+    my $proxee;
+    Proxy.new:         :FETCH{ my $*PROXEE := $proxee; fetch   },
+    STORE => -> $, \v is raw { my $*PROXEE := $proxee; store v }
 }
