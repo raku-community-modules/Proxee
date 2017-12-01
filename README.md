@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/zoffixznet/perl6-Proxee.svg)](https://travis-ci.org/zoffixznet/perl6-Proxee)
+
 # NAME
 
 `Proxee` — A more usable [`Proxy`](https://docs.perl6.org/type/Proxy) with bells
