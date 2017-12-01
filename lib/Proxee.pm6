@@ -9,8 +9,12 @@ class Proxee::X::CannotAssignStore is Exception {
 
 proto method new(|) { * }
 multi method new (&block) {
-    dd [ |block ];
-    self.new: |block
+    my $v := block;
+    $v =:= Nil
+        ?? self.new
+        !! nqp::istype($v, List)
+            ?? self.new(|$v.Capture)
+            !! self.new(|$v)
 }
 multi method new(\coercer where {.HOW ~~ Metamodel::CoercionHOW}) {
     my \from     = coercer.^constraint_type;
