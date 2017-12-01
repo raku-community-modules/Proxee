@@ -90,32 +90,32 @@ subtest 'store, fetch (default store, default fetch)' => {
     is-deeply $v, 13, 'fetched value after store (2)';
 }
 
-subtest 'assign' => {
+subtest 'proxee' => {
     plan 3;
 
-    my $v := Proxee.new: -> { :ASSIGN{ $_⁴ }, :FETCH{ $*PROXEE - 10 } };
+    my $v := Proxee.new: -> { :PROXEE{ $_⁴ }, :FETCH{ $*PROXEE - 10 } };
     $v = 11;
     is-deeply $v, 14631, 'fetched value after store (1)';
 
     $v = 13;
     is-deeply $v, 28551, 'fetched value after store (2)';
 
-    throws-like { Proxee.new: -> { :ASSIGN{;}, :STORE{;}, :FETCH{;} } },
-        Proxee::X::CannotAssignStore, ':ASSIGN + :STORE + :FETCH{;} throws';
+    throws-like { Proxee.new: -> { :PROXEE{;}, :STORE{;}, :FETCH{;} } },
+        Proxee::X::CannotProxeeStore, ':PROXEE + :STORE + :FETCH{;} throws';
 }
 
-subtest 'assign (default fetch)' => {
+subtest 'proxee (default fetch)' => {
     plan 3;
 
-    my $v := Proxee.new: -> { :ASSIGN{ $_⁶ } };
+    my $v := Proxee.new: -> { :PROXEE{ $_⁶ } };
     $v = 11;
     is-deeply $v, 1771561, 'fetched value after store (1)';
 
     $v = 13;
     is-deeply $v, 4826809, 'fetched value after store (2)';
 
-    throws-like { Proxee.new: -> { :ASSIGN{;}, :STORE{;} } },
-        Proxee::X::CannotAssignStore, ':ASSIGN + :STORE throws';
+    throws-like { Proxee.new: -> { :PROXEE{;}, :STORE{;} } },
+        Proxee::X::CannotProxeeStore, ':PROXEE + :STORE throws';
 }
 
 done-testing;

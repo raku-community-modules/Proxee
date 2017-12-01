@@ -57,21 +57,133 @@ Special shared dynvar:
     $stuff2 = 'meow';
     say $stuff2; # OUTPUT: «42 | meow␤»
 
+    # Default STORErer
+    my $cuber := Proxee.new: :FETCH{ $*PROXEE³ };
+    $cuber = 11;
+    say $cuber; # OUTPUT: «1331␤»
+
     # Default FETCHer
-    my $squarer := Proxee.new: :STORE{ $*PROXEE = $_² },
+    my $squarer := Proxee.new: :STORE{ $*PROXEE = $_² };
     $squarer = 11;
     say $squarer; # OUTPUT: «121␤»
 
-    # Default STORErer
-    my $cuber := Proxee.new: :FETCH{ $*PROXEE³ },
-    $cuber = 11;
-    say $squarer; # OUTPUT: «1331␤»
+    # Shortcut to assign to $*PROXEE
+    my $squarer := Proxee.new: :PROXEE{ $_² };
+    $squarer = 11;
+    say $squarer; # OUTPUT: «121␤»
 ```
 
 # DESCRIPTION
 
 The core [`Proxy`](https://docs.perl6.org/type/Proxy) type is a bit clunky to use. This module
 provides an alternative, improved interface, with a few extra features.
+
+# METHODS
+
+## `new`
+
+```perl6
+multi method new (\coercer where {.HOW ~~ Metamodel::CoercionHOW})
+multi method new (:&PROXEE, :&STORE, :&FETCH)
+multi method new (&block)
+```
+
+Creates and returns a new [`Proxy`](https://docs.perl6.org/type/Proxy) object
+whose `:STORE` and `:FETCH` `Callable`s have been set to behave like
+functionality offered by `Proxee`. Possible arguments are:
+
+### A Coercer
+
+Simply pass a coercer as a positional argument to create a coercing proxy that
+coerces stored values to specified type:
+
+```perl6
+my  $Cool-to-Int := Proxee.new: Int(Cool);
+    $Cool-to-Int = ' 42.70 ';
+say $Cool-to-Int; # OUTPUT: «42␤»
+    $Cool-to-Int = Date.today
+    # OUTPUT: «Type check failed in Proxee; expected Cool but got Date (Date)␤»
+```
+
+**Note:** none of `:&PROXEE`, `:&STORE`, `:&FETCH` can be used together
+with the coercer argument.
+
+### An Improved Proxy
+
+The regular functionality of a [`Proxy`](https://docs.perl6.org/type/Proxy)
+remains, except the `Proxy` object is no longer passed to neither `:FETCH`
+nor `:STORE` callables. `:FETCH` gets no args; `:STORE` gets 1 arg, the value
+being stored:
+
+```perl6
+    my @stuff;
+    my $stuff := Proxee.new: :STORE{ @stuff.push: $_ }, :FETCH{ @stuff.join: ' | ' }
+    $stuff = 42;
+    $stuff = 'meow';
+    say $stuff; # OUTPUT: «42 | meow␤»
+```
+
+In addition, automated storage is available. Simply **assign** (do not bind, or
+you'll break it) to `$*PROXEE` variable to store the value in the automated
+storage and read from it to retrieve that value:
+
+```
+    my $stuff2 := Proxee.new: :STORE{ $*PROXEE.push: $_ }, :FETCH{ $*PROXEE.join: ' | ' }
+    $stuff2 = 42;
+    $stuff2 = 'meow';
+    say $stuff2; # OUTPUT: «42 | meow␤»
+```
+
+The `:STORE` argument is optional and **defaults to** `{ $*PROXEE = $_ }`.
+The `:FETCH` argument is optional and **defaults to** `{ $*PROXEE }`.
+The `:PROXEE` argument is like `:STORE`, except it also assigns its return
+value to `$*PROXEE`:
+
+```perl6
+    my $squarer := Proxee.new: :PROXEE{ $_² };
+    $squarer = 11;
+    say $squarer; # OUTPUT: «121␤»
+```
+
+### A Callable
+
+You can also pass a single codeblock as an argument. It will be evaluated
+and its return value will be used as arguments to `Proxee.new` (after slight
+massaging to make `Pair`s in a `List` be passed as named args).
+
+This feature exists to make it slightly simpler to use closures with a Proxy:
+
+```
+    my $stuff2 := Proxee.new: {
+        my @stuff;
+        :STORE{ @stuff.push: $_    },
+        :FETCH{ @stuff.join: ' | ' }
+    }
+    $stuff2 = 42;
+    $stuff2 = 'meow';
+    say $stuff2; # OUTPUT: «42 | meow␤»
+```
+
+The above is equivalent to:
+
+```
+    my $stuff2 := do {
+        my @stuff;
+        Proxee.new: :STORE{ @stuff.push: $_    },
+                    :FETCH{ @stuff.join: ' | ' }
+    }
+    $stuff2 = 42;
+    $stuff2 = 'meow';
+    say $stuff2; # OUTPUT: «42 | meow␤»
+```
+
+Watch out you don't accidentally pass a block that would be interpreted
+as a `Hash`:
+
+```perl6
+    Proxy.new:    { :STORE{;}, :FETCH{;} } # WRONG; It's a Hash
+    Proxy.new: -> { :STORE{;}, :FETCH{;} } # RIGHT; It's a Block
+```
 
 ----
 

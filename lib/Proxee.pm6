@@ -1,9 +1,9 @@
 unit class Proxee;
 use MONKEY-GUTS;
 
-class Proxee::X::CannotAssignStore is Exception {
+class Proxee::X::CannotProxeeStore is Exception {
     method message {
-        'A Proxee cannot use :ASSIGN and :STORE at the same time'
+        'A Proxee cannot use :PROXEE and :STORE at the same time'
     }
 }
 
@@ -31,10 +31,10 @@ multi method new(\coercer where {.HOW ~~ Metamodel::CoercionHOW}) {
         $STORAGE
     }
 }
-multi method new (:&ASSIGN, :&STORE, :&FETCH) {
-    &ASSIGN and &STORE and die Proxee::X::CannotAssignStore.new;
+multi method new (:&PROXEE, :&STORE, :&FETCH) {
+    &PROXEE and &STORE and die Proxee::X::CannotProxeeStore.new;
 
-    my &store := &ASSIGN ?? { $*PROXEE = ASSIGN $_ }
+    my &store := &PROXEE ?? { $*PROXEE = PROXEE $_ }
                          !! (&STORE || { $*PROXEE = $_ });
     my &fetch := &FETCH  || { $*PROXEE };
 
