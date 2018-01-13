@@ -26,7 +26,7 @@
 
 Coercers:
 
-```perl6
+```perl-6
     # Coercer types on variables:
     my $integral := Proxee.new: Int();
     $integral = ' 42.1e0 ';
