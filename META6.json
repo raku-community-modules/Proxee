@@ -12,5 +12,5 @@
         "Proxee::X::CannotBindStore": "lib/Proxee.pm6"
     },
     "authors"      : ["Zoffix Znet"],
-    "support"      : { "source" : "https://github.com/zoffixznet/perl6-Proxee.git" }
+    "support"      : { "source" : "https://github.com/raku-community-modules/Proxee.git" }
 }
