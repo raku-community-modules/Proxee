@@ -1,7 +1,6 @@
-use lib <lib>;
 use Test;
-
 use Proxee;
+
 plan 8;
 
 subtest 'coercer, variables' => {
@@ -118,4 +117,4 @@ subtest 'proxee (default fetch)' => {
         Proxee::X::CannotProxeeStore, ':PROXEE + :STORE throws';
 }
 
-done-testing;
+# vim: expandtab shiftwidth=4
