@@ -20,7 +20,8 @@
   "support": {
     "source": "https://github.com/raku-community-modules/Proxee.git"
   },
-  "tags": [ "PROXY",
+  "tags": [
+    "PROXY",
     "containers"
   ],
   "test-depends": [
