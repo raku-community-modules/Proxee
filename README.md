@@ -121,7 +121,7 @@ $stuff2 = 'meow';
 say $stuff2; # OUTPUT: «42 | meow␤»
 ```
 
-The `:STORE` argument is optional and **defaults to** `{ $*PROXEE = $_ }`. The `:FETCH` argument is optional and **defaults to** `{ $*PROXEE }`. The `:PROXEE` argument is like `:STORE`, except it also assigns itsi return value to `$*PROXEE`:
+The `:STORE` argument is optional and **defaults to** `{ $*PROXEE = $_ }`. The `:FETCH` argument is optional and **defaults to** `{ $*PROXEE }`. The `:PROXEE` argument is like `:STORE`, except it also assigns its return value to `$*PROXEE`:
 
 ```raku
 my $squarer := Proxee.new: :PROXEE{ $_² };
