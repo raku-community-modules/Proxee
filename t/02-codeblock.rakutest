@@ -36,9 +36,9 @@ subtest 'coercer, attributes' => {
     $o.foo = <72>;
     is-deeply $o.foo, <72>, 'does not coerce subclasses of target type';
 
-    throws-like { Foo.new: foo => Date.today }, X::Method::NotFound,
+    throws-like { Foo.new: foo => DateTime.now }, X::Multi::NoMatch,
         'throws with incorrect type (instantiation)';
-    throws-like { $o.foo = Date.today        }, X::Method::NotFound,
+    throws-like { $o.foo = DateTime.now        }, X::Multi::NoMatch,
         'throws with incorrect type (assignment)';
 }
 

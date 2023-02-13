@@ -293,7 +293,7 @@ Zoffix Znet
 
 Copyright 2017 - 2018 Zoffix Znet
 
-Copyright 2019 - 2022 Raku Community
+Copyright 2019 - 2023 Raku Community
 
 This library is free software; you can redistribute it and/or modify it under the Artistic License 2.0.
 
